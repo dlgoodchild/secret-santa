@@ -48,11 +48,13 @@ $aCouples = array(
 $oTombola = new \DLGoodchild\SecretSanta\Tombola();
 
 foreach ( $aParticipants as $aParticipant ) {
-	$oParticipant = ( new \DLGoodchild\SecretSanta\Participant() )
-		->setName( $aParticipant[0] )
-		->setIdentifier( $aParticipant[1] )
-		->setEmail( $aParticipant[2] );
-	$oTombola->addParticipant( $oParticipant );
+	$oTombola->addParticipant(
+		new \DLGoodchild\SecretSanta\Participant(
+			$aParticipant[0],
+			$aParticipant[2],
+			$aParticipant[1]
+		)
+	);
 }
 
 foreach ( $aCouples as $aCouple ) {

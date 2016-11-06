@@ -29,9 +29,21 @@ class Participant {
 	protected $oPartner;
 
 	/**
-	 * @var Participant
+	 * @var Participant[]
 	 */
-	protected $oRecipient;
+	protected $aRecipients;
+
+	/**
+	 * @param string $sName
+	 * @param string $sEmail
+	 * @param string $sIdentifier
+	 */
+	public function __construct( string $sName, string $sEmail, ?string $sIdentifier = null ) {
+		$this
+			->setName( $sName )
+			->setEmail( $sEmail )
+			->setIdentifier( $sIdentifier ?? ( explode( '@', strtolower( $sEmail ) )[0] ) );
+	}
 
 	/**
 	 * @return string
@@ -62,10 +74,10 @@ class Participant {
 	}
 
 	/**
-	 * @return Participant
+	 * @return Participant[]
 	 */
-	public function getRecipient(): Participant {
-		return $this->oRecipient;
+	public function getRecipients(): array {
+		return $this->aRecipients;
 	}
 
 	/**
@@ -79,7 +91,7 @@ class Participant {
 	 * @return bool
 	 */
 	public function hasRecipient(): bool {
-		return ( $this->oRecipient instanceof Participant );
+		return ( count( $this->aRecipients ) > 0 );
 	}
 
 	/**
@@ -95,7 +107,7 @@ class Participant {
 	 * @param string $sIdentifier
 	 * @return Participant
 	 */
-	public function setIdentifier( string $sIdentifier ): Participant {
+	public function setIdentifier( $sIdentifier ): Participant {
 		$this->sIdentifier = $sIdentifier;
 		return $this;
 	}
@@ -123,7 +135,7 @@ class Participant {
 	 * @return Participant
 	 */
 	public function allocate( Participant $oRecipient ): Participant {
-		$this->oRecipient = $oRecipient;
+		$this->aRecipients[] = $oRecipient;
 		return $this;
 	}
 
@@ -131,7 +143,7 @@ class Participant {
 	 * @return Participant
 	 */
 	public function deallocate() {
-		$this->oRecipient = null;
+		$this->aRecipients = null;
 		return $this;
 	}
 

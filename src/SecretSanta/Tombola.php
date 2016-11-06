@@ -1,10 +1,10 @@
-<?php
+<?php declare( strict_types=1 );
 
-namespace SecretSanta;
+namespace DLGoodchild\SecretSanta;
 
 /**
  * Class Tombola
- * @package SecretSanta
+ * @package DLGoodchild\SecretSanta
  */
 class Tombola {
 
@@ -25,7 +25,7 @@ class Tombola {
 	 * @return Participant
 	 * @throws \Exception
 	 */
-	public function getParticipantByEmail( $sEmail ) {
+	public function getParticipantByEmail( string $sEmail ): Participant {
 		foreach ( $this->aParticipants as $oParticipant ) {
 			if ( $oParticipant->getEmail() == $sEmail ) {
 				return $oParticipant;
@@ -39,7 +39,7 @@ class Tombola {
 	 * @return Participant
 	 * @throws \Exception
 	 */
-	public function getParticipantByIdentifier( $sIdentifier ) {
+	public function getParticipantByIdentifier( string $sIdentifier ): Participant {
 		foreach ( $this->aParticipants as $oParticipant ) {
 			if ( $oParticipant->getIdentifier() == $sIdentifier ) {
 				return $oParticipant;
@@ -53,7 +53,7 @@ class Tombola {
 	 * @return Participant
 	 * @throws \Exception
 	 */
-	public function getParticipantByName( $sName ) {
+	public function getParticipantByName( string $sName ): Participant {
 		foreach ( $this->aParticipants as $oParticipant ) {
 			if ( $oParticipant->getName() == $sName ) {
 				return $oParticipant;
@@ -65,17 +65,17 @@ class Tombola {
 	/**
 	 * @return Participant[]
 	 */
-	public function getParticipants() {
+	public function getParticipants(): array {
 		return $this->aParticipants;
 	}
 
 	/**
 	 * @param string $sIdentifierA
 	 * @param string $sIdentifierB
-	 * @return $this
+	 * @return Tombola
 	 * @throws \Exception
 	 */
-	public function addCoupleByIdentifier( $sIdentifierA, $sIdentifierB ) {
+	public function addCoupleByIdentifier( string $sIdentifierA, string $sIdentifierB ): Tombola {
 		$oParticipantA = $this->getParticipantByIdentifier( $sIdentifierA );
 		$oParticipantB = $this->getParticipantByIdentifier( $sIdentifierB );
 
@@ -86,18 +86,18 @@ class Tombola {
 
 	/**
 	 * @param Participant $oPerson
-	 * @return $this
+	 * @return Tombola
 	 */
-	public function addParticipant( Participant $oPerson ) {
+	public function addParticipant( Participant $oPerson ): Tombola {
 		$this->aParticipants[] = $oPerson;
 		return $this;
 	}
 
 	/**
 	 * @param Participant[] $aParticipants
-	 * @return $this
+	 * @return Tombola
 	 */
-	public function addParticipants( array $aParticipants ) {
+	public function addParticipants( array $aParticipants ): Tombola {
 		$this->aParticipants = array_merge( $this->aParticipants, $aParticipants );
 		return $this;
 	}
@@ -105,19 +105,19 @@ class Tombola {
 	/**
 	 * @param Participant $oParticipant
 	 * @param Participant[] $aRecipients
-	 * @return $this
+	 * @return Tombola
 	 */
-	private function allocate( Participant $oParticipant, array $aRecipients ) {
+	private function allocate( Participant $oParticipant, array $aRecipients ): Tombola {
 		$nRandIndex = rand( 0, count( $aRecipients )-1 );
 		$oParticipant->allocate( $aRecipients[$nRandIndex] );
 		return $this;
 	}
 
 	/**
-	 * @return $this
+	 * @return Tombola
 	 * @throws \Exception
 	 */
-	public function generate() {
+	public function generate(): Tombola {
 		$nAttempt = 0;
 		$nMaxAttempts = 100; // some sane limit.
 
@@ -165,7 +165,7 @@ class Tombola {
 	 * @param Participant $oParticipant
 	 * @return Participant[]
 	 */
-	private function obtainAvailableRecipientsForParticipant( Participant $oParticipant ) {
+	private function obtainAvailableRecipientsForParticipant( Participant $oParticipant ): array {
 		$aAllocatedRecipientIdentifiers = array();
 		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
 			if ( $oTestParticipant->hasRecipient() ) {
@@ -191,7 +191,7 @@ class Tombola {
 	/**
 	 * @return Participant[]
 	 */
-	private function obtainParticipantsWithRecipient() {
+	private function obtainParticipantsWithRecipient(): array {
 		$aExtract = array();
 		foreach ( $this->aParticipants as $nIndex => $oParticipant ) {
 			if ( $oParticipant->hasRecipient() ) {
@@ -204,7 +204,7 @@ class Tombola {
 	/**
 	 * @return Participant[]
 	 */
-	private function obtainParticipantsWithoutRecipient() {
+	private function obtainParticipantsWithoutRecipient(): array {
 		$aExtract = array();
 		foreach ( $this->aParticipants as $nIndex => $oParticipant ) {
 			if ( !$oParticipant->hasRecipient() ) {

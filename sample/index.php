@@ -1,12 +1,9 @@
-<?php
+<?php declare( strict_types=1 );
 
 error_reporting( E_ALL );
 ini_set( 'display_errors', 'on' );
 
 $oComposer = include_once( __DIR__.'/src/vendor/autoload.php' );
-
-include_once( __DIR__.'/Tombola.php' );
-include_once( __DIR__.'/Participant.php' );
 
 $oMandrill = new Mandrill( '...' );
 $aMessageParams = array(
@@ -48,10 +45,10 @@ $aCouples = array(
 	array( 'au', 'da' )
 );
 
-$oTombola = new \SecretSanta\Tombola();
+$oTombola = new \DLGoodchild\SecretSanta\Tombola();
 
 foreach ( $aParticipants as $aParticipant ) {
-	$oParticipant = ( new \SecretSanta\Participant() )
+	$oParticipant = ( new \DLGoodchild\SecretSanta\Participant() )
 		->setName( $aParticipant[0] )
 		->setIdentifier( $aParticipant[1] )
 		->setEmail( $aParticipant[2] );

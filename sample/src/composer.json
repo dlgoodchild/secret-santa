@@ -1,0 +1,9 @@
+{
+	"name" : "dlgoodchild/secret-santa-sample",
+	"description" : "Secret Santa Sample",
+	"license" : "proprietary",
+	"require": {
+		"mailgun/mailgun-php": "~1.7.2",
+		"mandrill/mandrill": "1.0.55"
+	}
+}

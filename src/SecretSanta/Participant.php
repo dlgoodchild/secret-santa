@@ -1,10 +1,10 @@
-<?php
+<?php declare( strict_types=1 );
 
-namespace SecretSanta;
+namespace DLGoodchild\SecretSanta;
 
 /**
  * Class Participant
- * @package SecretSanta
+ * @package DLGoodchild\SecretSanta
  */
 class Participant {
 
@@ -36,99 +36,99 @@ class Participant {
 	/**
 	 * @return string
 	 */
-	public function getEmail() {
+	public function getEmail(): string {
 		return $this->sEmail;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getIdentifier() {
+	public function getIdentifier(): string {
 		return $this->sIdentifier;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName() {
+	public function getName(): string {
 		return $this->sName;
 	}
 
 	/**
 	 * @return Participant
 	 */
-	public function getPartner() {
+	public function getPartner(): Participant {
 		return $this->oPartner;
 	}
 
 	/**
 	 * @return Participant
 	 */
-	public function getRecipient() {
+	public function getRecipient(): Participant {
 		return $this->oRecipient;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasPartner() {
+	public function hasPartner(): bool {
 		return ( $this->oPartner instanceof Participant );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasRecipient() {
+	public function hasRecipient(): bool {
 		return ( $this->oRecipient instanceof Participant );
 	}
 
 	/**
 	 * @param string $sEmail
-	 * @return $this
+	 * @return Participant
 	 */
-	public function setEmail( $sEmail ) {
+	public function setEmail( string $sEmail ): Participant {
 		$this->sEmail = $sEmail;
 		return $this;
 	}
 
 	/**
 	 * @param string $sIdentifier
-	 * @return $this
+	 * @return Participant
 	 */
-	public function setIdentifier( $sIdentifier ) {
+	public function setIdentifier( string $sIdentifier ): Participant {
 		$this->sIdentifier = $sIdentifier;
 		return $this;
 	}
 
 	/**
 	 * @param string $sName
-	 * @return $this
+	 * @return Participant
 	 */
-	public function setName( $sName ) {
+	public function setName( string $sName ): Participant {
 		$this->sName = $sName;
 		return $this;
 	}
 
 	/**
 	 * @param Participant $oPartner
-	 * @return $this
+	 * @return Participant
 	 */
-	public function setPartner( Participant $oPartner ) {
+	public function setPartner( Participant $oPartner ): Participant {
 		$this->oPartner = $oPartner;
 		return $this;
 	}
 
 	/**
 	 * @param Participant $oRecipient
-	 * @return $this
+	 * @return Participant
 	 */
-	public function allocate( Participant $oRecipient ) {
+	public function allocate( Participant $oRecipient ): Participant {
 		$this->oRecipient = $oRecipient;
 		return $this;
 	}
 
 	/**
-	 * @return $this
+	 * @return Participant
 	 */
 	public function deallocate() {
 		$this->oRecipient = null;
@@ -136,7 +136,7 @@ class Participant {
 	}
 
 	/**
-	 * @return $this
+	 * @return Participant
 	 */
 	public function divorce() {
 		$this->oPartner = null;

@@ -154,6 +154,10 @@ class Tombola {
 						$this->allocate( $oParticipant, $aPossibleRecipients );
 					}
 				}
+
+				if ( !( new Verification() )->verify( $this->aParticipants, $this->nRecipientsEach ) ) {
+					throw new \Exception( 'Verification failed' );
+				}
 				break;
 			}
 			catch ( \Exception $oE ) {

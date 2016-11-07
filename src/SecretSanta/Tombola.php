@@ -178,7 +178,10 @@ class Tombola {
 		/* @var Participant $oTestParticipant */
 		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
 			$aRemainingRecipientIdentifiers[$oTestParticipant->getIdentifier()] = $this->nRecipientsEach;
+		}
 
+		// naff, todo, fix.
+		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
 			if ( $oTestParticipant->hasRecipient() ) {
 				foreach ( $oTestParticipant->getRecipients() as $oRecipient ) {
 					$aRemainingRecipientIdentifiers[$oRecipient->getIdentifier()]--;

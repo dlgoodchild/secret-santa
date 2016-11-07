@@ -43,7 +43,7 @@ class Verification {
 					$nTally = 0;
 					/* @var Participant $oTestParticipant */
 					foreach ( $aParticipants as $oTestParticipant ) {
-						$nTally += in_array( $oTestParticipant->getIdentifier(),
+						$nTally += in_array( $oParticipant->getIdentifier(),
 							array_map( function( Participant $oParticipant ) { $oParticipant->getIdentifier(); }, $oTestParticipant->getRecipients() )
 						)? 1: 0;
 					}

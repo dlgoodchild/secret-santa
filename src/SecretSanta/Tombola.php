@@ -171,16 +171,6 @@ class Tombola {
 		if ( $nAttempt == ($nMaxAttempts - 1) ) {
 			throw new \Exception( 'Failed to obtain a match' );
 		}
-		/*
-		else {
-			foreach ( $this->aParticipants as $oParticipant ) {
-				printf(
-					'%s will buy for %s\n<br />',
-					$oParticipant->getName(),
-					$oParticipant->getRecipient()->getName()
-				);
-			}
-		}*/
 
 		return $this;
 	}

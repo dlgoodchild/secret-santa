@@ -225,7 +225,7 @@ class Tombola {
 		// convert the remaining identifiers (>0) to participants
 		$aRemainingRecipients = array();
 		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
-			if ( $aRemainingRecipientIdentifiers[$oTestParticipant->getIdentifier()] == 0 ) {
+			if ( $aRemainingRecipientIdentifiers[$oTestParticipant->getIdentifier()] <= 0 ) {
 				continue;
 			}
 			$aRemainingRecipients[] = $this->aParticipants[$nIndex];

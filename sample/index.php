@@ -5,6 +5,9 @@ ini_set( 'display_errors', 'on' );
 
 $oComposer = include_once( __DIR__.'/src/vendor/autoload.php' );
 
+use \DLGoodchild\SecretSanta\Participant;
+
+
 $oMandrill = new Mandrill( '...' );
 $aMessageParams = array(
 	'html' => '<p>Example HTML content</p>',
@@ -63,42 +66,67 @@ foreach ( $aCouples as $aCouple ) {
 
 $oTombola->generate();
 
+$bDebug = true;
+
 $aParticipants = $oTombola->getParticipants();
 foreach ( $aParticipants as $oParticipant ) {
-	$aParams = $aMessageParams;
-	$aParams['to'] = array(
-		array(
-			//'email' => $oParticipant->getEmail(),
-			'email' => $oParticipant->getIdentifier().'test.secret@d....co.uk',
-			'name' => $oParticipant->getName(),
-			'type' => 'to'
+	$sRecipientNameList = implode( ', ',
+		array_map(
+			function ( Participant $oParticipant ) {
+				return $oParticipant->getName();
+			},
+			$oParticipant->getRecipients()
 		)
 	);
 
-	$aParams['subject'] = sprintf(
-		'Secret Santa: %s, you have to buy a present for...',
-		explode( ' ', $oParticipant->getName() )[0]
-	);
+	if ( $bDebug ?? false ) {
+		echo "<h3>".$oParticipant->getName()."</h3>";
+		echo "<p>".$sRecipientNameList."</p>";
+	}
+	else {
+		$aParams = $aMessageParams;
+		$aParams['to'] = array(
+			array(
+				//'email' => $oParticipant->getEmail(),
+				'email' => $oParticipant->getIdentifier() . 'test.secret@d....co.uk',
+				'name' => $oParticipant->getName(),
+				'type' => 'to'
+			)
+		);
 
-	//echo $aParams['subject'].' '.$oParticipant->getRecipient()->getName().'<br />';
-	$aParams['html'] = sprintf( "
+		$aParams['subject'] = sprintf(
+			'Secret Santa: %s, you have to buy a present for...',
+			explode( ' ', $oParticipant->getName() )[0]
+		);
+
+		//echo $aParams['subject'].' '.$oParticipant->getRecipient()->getName().'<br />';
+		$aParams['html'] = sprintf(
+			"
 			<p>Hi %s,</p>
 			<p><strong>The Goodchild (plus Martin and Díaz) Secret Santa Tombola has selected...</strong></p>
 			<p><b>%s</b>!</p>
 			<p></p>
-			<p>The budget for this years secret santa is around &pound;50 GBP</p>
+			<p>The budget for this years secret santa is around &pound;30 GBP per gift</p>
 			<p>...and remember, it's a secret!</p>
 			<p></p>
 			<p>Ho ho ho!</p>
 			<p>Santa x</p>
-		",
-		explode( ' ', $oParticipant->getName() )[0],
-		$oParticipant->getRecipient()->getName()
-	);
+			",
+			explode( ' ', $oParticipant->getName() )[0],
+			implode( ', ',
+				array_map(
+					function ( Participant $oParticipant ) {
+						return $oParticipant->getName();
+					},
+					$oParticipant->getRecipients()
+				)
+			)
+		);
 
-	continue;
-	$aResponse = $oMandrill->messages->send( $aParams );
-	var_dump( $aResponse );
+		continue;
+		$aResponse = $oMandrill->messages->send( $aParams );
+		var_dump( $aResponse );
+	}
 	echo '<hr />';
 }
 

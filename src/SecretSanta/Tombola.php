@@ -14,9 +14,15 @@ class Tombola {
 	protected $aParticipants;
 
 	/**
-	 *
+	 * @var int
 	 */
-	public function __construct() {
+	protected $nRecipientsEach;
+
+	/**
+	 * @param int $nRecipientsEach
+	 */
+	public function __construct( int $nRecipientsEach = 1 ) {
+		$this->nRecipientsEach = $nRecipientsEach;
 		$this->aParticipants = array();
 	}
 
@@ -124,7 +130,7 @@ class Tombola {
 		while ( $nAttempt < $nMaxAttempts ) {
 			try {
 				foreach ( $this->aParticipants as $oParticipant ) {
-					if ( $oParticipant->hasRecipient() ) {
+					if ( count( $oParticipant->getRecipients() ) === $this->nRecipientsEach ) {
 						continue;
 					}
 
@@ -166,24 +172,41 @@ class Tombola {
 	 * @return Participant[]
 	 */
 	private function obtainAvailableRecipientsForParticipant( Participant $oParticipant ): array {
-		$aAllocatedRecipientIdentifiers = array();
+		// build a fresh list of remaining recipients
+		$aRemainingRecipientIdentifiers = array();
+
+		/* @var Participant $oTestParticipant */
 		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
+			$aRemainingRecipientIdentifiers[$oTestParticipant->getIdentifier()] = $this->nRecipientsEach;
+
 			if ( $oTestParticipant->hasRecipient() ) {
-				$aAllocatedRecipientIdentifiers[] = $oTestParticipant->getRecipient()->getIdentifier();
+				foreach ( $oTestParticipant->getRecipients() as $oRecipient ) {
+					$aRemainingRecipientIdentifiers[$oRecipient->getIdentifier()]--;
+				}
 			}
 		}
 
-		$sPartnerIdentifier = $oParticipant->hasPartner()? $oParticipant->getPartner()->getIdentifier(): false;
-		$sSelfIdentifier = $oParticipant->getIdentifier();
+		// remove self
+		$aRemainingRecipientIdentifiers[$oParticipant->getIdentifier()] = 0;
 
+		// flat out remove the partner and their recipients from the possible remaining recipients
+		if ( $oParticipant->hasPartner() ) {
+			$oPartner = $oParticipant->getPartner();
+			$aRemainingRecipientIdentifiers[$oPartner->getIdentifier()] = 0;
+
+			$aPartnerRecipientIdentifiers = $oPartner->getRecipients();
+			foreach ( $aPartnerRecipientIdentifiers as $oPartnerRecipient ) {
+				$aRemainingRecipientIdentifiers[$oPartnerRecipient->getIdentifier()] = 0;
+			}
+		}
+
+		// convert the remaining identifiers (>0) to participants
 		$aRemainingRecipients = array();
 		foreach ( $this->aParticipants as $nIndex => $oTestParticipant ) {
-			$sTestIdentifier = $oTestParticipant->getIdentifier();
-			if ( !in_array( $sTestIdentifier, $aAllocatedRecipientIdentifiers )
-				&& $sTestIdentifier != $sPartnerIdentifier
-				&& $sTestIdentifier != $sSelfIdentifier ) {
-				$aRemainingRecipients[] = $this->aParticipants[$nIndex];
+			if ( $aRemainingRecipientIdentifiers[$oTestParticipant->getIdentifier()] == 0 ) {
+				continue;
 			}
+			$aRemainingRecipients[] = $this->aParticipants[$nIndex];
 		}
 		return $aRemainingRecipients;
 	}

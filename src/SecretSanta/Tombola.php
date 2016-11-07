@@ -203,8 +203,13 @@ class Tombola {
 			}
 		}
 
-		// remove self
+		// remove self and self's recipients
 		$aRemainingRecipientIdentifiers[$oParticipant->getIdentifier()] = 0;
+
+		$aRecipients = $oParticipant->getRecipients();
+		foreach ( $aRecipients as $oSelfRecipient ) {
+			$aRemainingRecipientIdentifiers[$oSelfRecipient->getIdentifier()] = 0;
+		}
 
 		// flat out remove the partner and their recipients from the possible remaining recipients
 		if ( $oParticipant->hasPartner() ) {

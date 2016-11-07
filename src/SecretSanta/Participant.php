@@ -43,6 +43,8 @@ class Participant {
 			->setName( $sName )
 			->setEmail( $sEmail )
 			->setIdentifier( $sIdentifier ?? ( explode( '@', strtolower( $sEmail ) )[0] ) );
+
+		$this->aRecipients = array();
 	}
 
 	/**

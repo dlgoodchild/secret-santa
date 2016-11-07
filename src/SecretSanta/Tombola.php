@@ -9,6 +9,11 @@ namespace DLGoodchild\SecretSanta;
 class Tombola {
 
 	/**
+	 * @var int
+	 */
+	protected $nAttempts;
+
+	/**
 	 * @var Participant[]
 	 */
 	protected $aParticipants;
@@ -20,9 +25,12 @@ class Tombola {
 
 	/**
 	 * @param int $nRecipientsEach
+	 * @param int $nAttempts
 	 */
-	public function __construct( int $nRecipientsEach = 1 ) {
+	public function __construct( int $nRecipientsEach = 1, $nAttempts = 100 ) {
 		$this->nRecipientsEach = $nRecipientsEach;
+		$this->nAttempts = $nAttempts;
+
 		$this->aParticipants = array();
 	}
 
@@ -125,7 +133,7 @@ class Tombola {
 	 */
 	public function generate(): Tombola {
 		$nAttempt = 0;
-		$nMaxAttempts = 100; // some sane limit.
+		$nMaxAttempts = $this->nAttempts; // some sane limit.
 
 		while ( $nAttempt < $nMaxAttempts ) {
 			try {
@@ -134,11 +142,17 @@ class Tombola {
 						continue;
 					}
 
-					$aPossibleRecipients = $this->obtainAvailableRecipientsForParticipant( $oParticipant );
-					if ( empty( $aPossibleRecipients ) ) {
-						throw new \Exception( 'This attempt resulted in a participant having no available recipients' );
+					for ( $i = 0; $i < $this->nRecipientsEach; $i++ ) {
+						$aPossibleRecipients = $this->obtainAvailableRecipientsForParticipant( $oParticipant );
+						if ( empty( $aPossibleRecipients ) ) {
+							throw new \Exception(
+								sprintf( 'This attempt resulted in participant %s having no available recipients (i: %s',
+									$oParticipant->getIdentifier(), $i
+								)
+							);
+						}
+						$this->allocate( $oParticipant, $aPossibleRecipients );
 					}
-					$this->allocate( $oParticipant, $aPossibleRecipients );
 				}
 				break;
 			}

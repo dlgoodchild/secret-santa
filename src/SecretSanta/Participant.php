@@ -144,15 +144,15 @@ class Participant {
 	/**
 	 * @return Participant
 	 */
-	public function deallocate() {
-		$this->aRecipients = null;
+	public function deallocate(): Participant {
+		$this->aRecipients = array();
 		return $this;
 	}
 
 	/**
 	 * @return Participant
 	 */
-	public function divorce() {
+	public function divorce(): Participant {
 		$this->oPartner = null;
 		return $this;
 	}

@@ -36,6 +36,11 @@ class Verification {
 		);
 	}
 
+	/**
+	 * @param array $aParticipants
+	 * @param int $nRecipientsEach
+	 * @return bool
+	 */
 	protected function passEachParticipantReceivesRequiredCount( array $aParticipants, int $nRecipientsEach ): bool {
 		return !count(
 			array_filter( $aParticipants,
@@ -44,7 +49,7 @@ class Verification {
 					/* @var Participant $oTestParticipant */
 					foreach ( $aParticipants as $oTestParticipant ) {
 						$nTally += in_array( $oParticipant->getIdentifier(),
-							array_map( function( Participant $oParticipant ) { $oParticipant->getIdentifier(); }, $oTestParticipant->getRecipients() )
+							array_map( function( Participant $oParticipant ) { return $oParticipant->getIdentifier(); }, $oTestParticipant->getRecipients() )
 						)? 1: 0;
 					}
 					return ($nTally !== $nRecipientsEach );
@@ -62,7 +67,7 @@ class Verification {
 			array_filter( $aParticipants,
 				function ( Participant $oParticipant ) {
 					return in_array( $oParticipant->getIdentifier(),
-						array_map( function( Participant $oParticipant ) { $oParticipant->getIdentifier(); }, $oParticipant->getRecipients() )
+						array_map( function( Participant $oParticipant ) { return $oParticipant->getIdentifier(); }, $oParticipant->getRecipients() )
 					);
 				}
 			)
